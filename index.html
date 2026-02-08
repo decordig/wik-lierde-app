@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>WIK Lierde Punten Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2e8b57">
+
+<style>
+
+body{
+font-family:Arial;
+background:#2e8b57;
+font-size:18px;
+color:white;
+padding:20px;
+}
+
+.container{
+max-width:420px;
+margin:auto;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin:8px 0;
+}
+
+label{flex:1;font-weight:bold;}
+
+input{
+width:90px;
+font-size:20px;
+font-weight:bold;
+color:blue;
+text-align:center;
+padding:4px;
+border-radius:6px;
+border:1px solid #aaa;
+}
+
+.result{
+width:90px;
+font-size:20px;
+font-weight:bold;
+text-align:center;
+padding:4px;
+border-radius:6px;
+border:1px solid #aaa;
+background:white;
+color:red;
+}
+
+.button-row{
+display:flex;
+justify-content:space-between;
+margin-top:10px;
+}
+
+.left-buttons{
+display:flex;
+gap:8px;
+}
+
+button{
+width:110px;
+padding:10px;
+font-weight:bold;
+font-size:15px;
+border-radius:8px;
+border:1px solid black;
+cursor:pointer;
+}
+
+.wissen{background:#ff5555;}
+.opslaan{background:#ffc107;}
+.bereken{background:#e6e6c8;}
+
+.table-frame{
+background:white;
+border-radius:12px;
+overflow:hidden;
+margin-top:15px;
+}
+
+.table-wrapper{
+height:280px;
+overflow-y:scroll;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+color:black;
+text-align:center;
+table-layout:fixed;
+}
+
+th,td{
+border:1px solid #ccc;
+}
+
+thead th{
+position:sticky;
+top:0;
+background:#ddd;
+font-size:16px;
+padding:8px;
+}
+
+tbody td{
+font-size:15px;
+padding:2px;
+}
+
+/* kolombreedtes */
+th:nth-child(1),td:nth-child(1){width:25%;}
+th:nth-child(2),
+th:nth-child(3),
+th:nth-child(4),
+th:nth-child(5),
+td:nth-child(2),
+td:nth-child(3),
+td:nth-child(4),
+td:nth-child(5){width:16%;}
+
+.cut{
+cursor:pointer;
+font-weight:bold;
+color:red;
+}
+
+.popup{
+display:none;
+position:fixed;
+top:40%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+color:black;
+padding:10px;
+border-radius:10px;
+text-align:center;
+}
+
+.popup button{
+display:block;
+width:120px;
+margin:5px auto;
+}
+
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h2>PUNTEN-CALCULATOR</h2>
+
+<div class="row">
+<label>TE SPELEN PUNTEN</label>
+<input id="tsp">
+</div>
+
+<div class="row">
+<label>GEMAAKTE PUNTEN</label>
+<input id="gp">
+</div>
+
+<div class="row">
+<label>AANTAL BEURTEN</label>
+<input id="brt">
+</div>
+
+<hr>
+
+<div class="row">
+<label>WEDSTRIJD PUNTEN</label>
+<div id="result" class="result">0</div>
+</div>
+
+<div class="button-row">
+<div class="left-buttons">
+<button class="wissen" onclick="wissen()">WISSEN</button>
+<button class="opslaan" onclick="toonPopup()">OPSLAAN</button>
+</div>
+<button class="bereken" onclick="bereken()">BEREKEN</button>
+</div>
+
+<div class="table-frame">
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>DATUM</th>
+<th>VRIJ</th>
+<th>BAND</th>
+<th>DRIE</th>
+<th>KNIP</th>
+</tr>
+</thead>
+<tbody id="tabel"></tbody>
+</table>
+</div>
+</div>
+
+<div id="popup" class="popup">
+<b>Kies discipline</b>
+<button onclick="opslaan('vrij')">Vrij Spel</button>
+<button onclick="opslaan('band')">Bandstoten</button>
+<button onclick="opslaan('drie')">Drieband</button>
+<button onclick="sluitPopup()">Annuleer</button>
+</div>
+
+</div>
+
+<script>
+
+function bereken(){
+let tsp=Number(document.getElementById("tsp").value);
+let gp=Number(document.getElementById("gp").value);
+let brt=Number(document.getElementById("brt").value);
+
+if(!tsp||!gp||!brt)return;
+
+let gmp=gp/brt;
+let punten=(200-(4*brt))*(gp/tsp);
+
+document.getElementById("result").innerText=Math.round(punten);
+}
+
+function wissen(){
+document.getElementById("tsp").value="";
+document.getElementById("gp").value="";
+document.getElementById("brt").value="";
+document.getElementById("result").innerText="0";
+}
+
+function toonPopup(){ popup.style.display="block"; }
+function sluitPopup(){ popup.style.display="none"; }
+
+function opslaan(discipline){
+
+let vandaag = new Date();
+let dag = String(vandaag.getDate()).padStart(2,'0');
+let maand = String(vandaag.getMonth()+1).padStart(2,'0');
+let jaar = vandaag.getFullYear();
+let datum = `${dag}/${maand}/${jaar}`;
+let punten=document.getElementById("result").innerText;
+
+let vrij="",band="",drie="";
+
+if(discipline==="vrij")vrij=punten;
+if(discipline==="band")band=punten;
+if(discipline==="drie")drie=punten;
+
+let rij=document.createElement("tr");
+
+rij.innerHTML=`
+<td>${datum}</td>
+<td>${vrij}</td>
+<td>${band}</td>
+<td>${drie}</td>
+<td class="cut" onclick="this.parentElement.remove()">✖</td>
+`;
+
+document.getElementById("tabel").appendChild(rij);
+
+sluitPopup();
+}
+
+</script>
+</body>
+</html>
