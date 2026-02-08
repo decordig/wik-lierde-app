@@ -7,10 +7,6 @@
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#2e8b57">
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
 
 <style>
 
@@ -278,5 +274,11 @@ sluitPopup();
 }
 
 </script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+
 </body>
 </html>
