@@ -20,7 +20,6 @@ padding:20px;
 
 .container{
 max-width:420px;
-height:500px;
 margin:auto;
 }
 
@@ -85,7 +84,8 @@ cursor:pointer;
 background:white;
 border-radius:12px;
 overflow:hidden;
-margin-top:15px;
+margin-top:20px;
+padding-bottom:10px;
 }
 
 .table-wrapper{
@@ -166,17 +166,77 @@ width:80px;
 font-size:18px;
 }
 
+}
 .button-row{
 gap:5px;
 }
+.table-actions{
+margin-top:10px;
+display:flex;
+justify-content:center;
+}
 
+.danger-btn{
+background:#c62828;
+color:white;
+border:none;
+padding:10px 20px;
+font-size:16px;
+border-radius:10px;
+cursor:pointer;
+width:220px;
+}
+
+.danger-btn:hover{
+background:#a31515;
+}
+
+.app{
+    max-width:500px;
+    margin:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:8px;
+    text-align:center;
+}
+
+.button-row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:15px;
+}
+
+.left-buttons{
+    display:flex;
+    gap:10px;
+}
+
+.table-actions{
+    margin-top:12px;
+    text-align:center;
+}
+
+.danger-btn{
+    background:#c62828;
+    color:white;
+    border:none;
+    padding:10px 14px;
+    border-radius:8px;
+    font-weight:bold;
 }
 
 </style>
 </head>
 
 <body>
-<div class="container">
+<div class="app">
 
 <h2>PUNTEN-CALCULATOR</h2>
 
@@ -211,6 +271,7 @@ gap:5px;
 </div>
 
 <div class="table-frame">
+
 <div class="table-wrapper">
 <table>
 <thead>
@@ -222,9 +283,18 @@ gap:5px;
 <th>KNIP</th>
 </tr>
 </thead>
-<tbody id="tabel"></tbody>
+
+<tbody id="tabel">
+</tbody>
 </table>
 </div>
+
+<div class="table-actions">
+<button onclick="wisAlles()" class="danger-btn">
+⚠ TABEL WISSEN
+</button>
+</div>
+
 </div>
 
 <div id="popup" class="popup">
@@ -235,7 +305,7 @@ gap:5px;
 <button onclick="sluitPopup()">Annuleer</button>
 </div>
 
-</div>
+</body>
 
 <script>
 
