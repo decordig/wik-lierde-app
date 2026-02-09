@@ -241,14 +241,44 @@ gap:5px;
 
 let wedstrijden = JSON.parse(localStorage.getItem("wedstrijden")) || [];
 
-function bewaarData() {
-    localStorage.setItem("wedstrijden", JSON.stringify(wedstrijden));
+function bewaarData(){
+localStorage.setItem("wedstrijden",JSON.stringify(wedstrijden));
 }
 
-function laadData() {
-    wedstrijden.forEach(item => voegRijToeAanTabel(item));
+function voegRijToeAanTabel(item,index){
+
+let rij=document.createElement("tr");
+
+rij.innerHTML=`
+<td>${item.datum}</td>
+<td>${item.vrij}</td>
+<td>${item.band}</td>
+<td>${item.drie}</td>
+<td class="cut" onclick="verwijderRij(${index})">✖</td>
+`;
+
+document.getElementById("tabel").appendChild(rij);
 }
 
+function laadData(){
+document.getElementById("tabel").innerHTML="";
+wedstrijden.forEach((item,index)=>{
+voegRijToeAanTabel(item,index);
+});
+}
+
+function verwijderRij(index){
+wedstrijden.splice(index,1);
+bewaarData();
+laadData();
+}
+
+function wisAlles(){
+if(!confirm("Ben je zeker dat je de volledige tabel wil wissen?"))return;
+wedstrijden=[];
+bewaarData();
+laadData();
+}
 
 function bereken(){
 let tsp=Number(document.getElementById("tsp").value);
@@ -257,9 +287,7 @@ let brt=Number(document.getElementById("brt").value);
 
 if(!tsp||!gp||!brt)return;
 
-let gmp=gp/brt;
 let punten=(200-(4*brt))*(gp/tsp);
-
 document.getElementById("result").innerText=Math.round(punten);
 }
 
@@ -275,11 +303,11 @@ function sluitPopup(){ popup.style.display="none"; }
 
 function opslaan(discipline){
 
-let vandaag = new Date();
-let dag = String(vandaag.getDate()).padStart(2,'0');
-let maand = String(vandaag.getMonth()+1).padStart(2,'0');
-let jaar = vandaag.getFullYear();
-let datum = `${dag}/${maand}/${jaar}`;
+let vandaag=new Date();
+let dag=String(vandaag.getDate()).padStart(2,'0');
+let maand=String(vandaag.getMonth()+1).padStart(2,'0');
+let jaar=vandaag.getFullYear();
+let datum=`${dag}/${maand}/${jaar}`;
 let punten=document.getElementById("result").innerText;
 
 let vrij="",band="",drie="";
@@ -288,35 +316,24 @@ if(discipline==="vrij")vrij=punten;
 if(discipline==="band")band=punten;
 if(discipline==="drie")drie=punten;
 
-let rij=document.createElement("tr");
-let data = {
-datum: datum,
-vrij: vrij,
-band: band,
-drie: drie
+let data={
+datum:datum,
+vrij:vrij,
+band:band,
+drie:drie
 };
 
 wedstrijden.push(data);
 bewaarData();
-
-
-rij.innerHTML=`
-<td>${datum}</td>
-<td>${vrij}</td>
-<td>${band}</td>
-<td>${drie}</td>
-<td class="cut" onclick="this.parentElement.remove()">✖</td>
-`;
-
-document.getElementById("tabel").appendChild(rij);
+laadData();
 
 sluitPopup();
 }
-window.onload = function () {
-    laadData();
-};
+
+window.onload=laadData;
 
 </script>
+
 <script>
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
