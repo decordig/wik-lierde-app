@@ -239,6 +239,17 @@ gap:5px;
 
 <script>
 
+let wedstrijden = JSON.parse(localStorage.getItem("wedstrijden")) || [];
+
+function bewaarData() {
+    localStorage.setItem("wedstrijden", JSON.stringify(wedstrijden));
+}
+
+function laadData() {
+    wedstrijden.forEach(item => voegRijToeAanTabel(item));
+}
+
+
 function bereken(){
 let tsp=Number(document.getElementById("tsp").value);
 let gp=Number(document.getElementById("gp").value);
@@ -278,6 +289,16 @@ if(discipline==="band")band=punten;
 if(discipline==="drie")drie=punten;
 
 let rij=document.createElement("tr");
+let data = {
+datum: datum,
+vrij: vrij,
+band: band,
+drie: drie
+};
+
+wedstrijden.push(data);
+bewaarData();
+
 
 rij.innerHTML=`
 <td>${datum}</td>
@@ -291,6 +312,9 @@ document.getElementById("tabel").appendChild(rij);
 
 sluitPopup();
 }
+window.onload = function () {
+    laadData();
+};
 
 </script>
 <script>
