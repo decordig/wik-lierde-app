@@ -15,7 +15,7 @@ font-family:Arial;
 background:#2e8b57;
 font-size:18px;
 color:white;
-padding:3px;
+padding:5px;
 }
 
 .app{
@@ -157,8 +157,10 @@ border:none;
 padding:8px 14px;
 border-radius:10px;
 font-weight:550;
-width:170px;
+width:auto;        /* ← NIET vaste breedte */
+min-width:170px;
 }
+
 .table-actions{
 display:flex;
 justify-content:space-between;
@@ -207,6 +209,30 @@ width:80px;
 font-size:18px;
 }
 
+.footer-actions{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:20px;   /* ruimte tussen tabel en knoppen */
+padding:0 4px;     /* kleine binnenruimte links/rechts */
+}
+.close-btn{
+background:#607d8b;
+color:white;
+border:none;
+border-radius:10px;
+padding:8px 14px;
+font-weight:550;
+width:auto;        /* ← NIET vaste breedte */
+min-width:120px;
+}
+
+.close-btn:active{
+transform:scale(0.96);
+}
+
+.danger-btn:active{
+transform:scale(0.96);
 }
 
 </style>
@@ -270,14 +296,16 @@ font-size:18px;
 
 </div>
 
-<div class="table-actions">
-    <button onclick="sluiten()" class="close-btn">
+<div class="footer-actions">
+
+    <button class="close-btn" onclick="sluitenApp()">
         SLUITEN
     </button>
 
-    <button onclick="wisAlles()" class="danger-btn">
+    <button class="danger-btn" onclick="wisAlles()">
         ⚠ TABEL WISSEN
     </button>
+
 </div>
 
 <div id="popup" class="popup">
@@ -320,8 +348,11 @@ document.getElementById("tabel").innerHTML="";
 wedstrijden.forEach((item,index)=>{
 voegRijToeAanTabel(item,index);
 });
-}
 
+}
+function sluitenApp(){
+    window.history.back();
+}
 function verwijderRij(index){
 wedstrijden.splice(index,1);
 bewaarData();
