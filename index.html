@@ -15,10 +15,10 @@ font-family:Arial;
 background:#2e8b57;
 font-size:18px;
 color:white;
-padding:2px;
+padding:3px;
 }
 
-.container{
+.app{
 max-width:420px;
 margin:auto;
 }
@@ -30,7 +30,10 @@ align-items:center;
 margin:8px 0;
 }
 
-label{flex:1;font-weight:bold;}
+label{
+flex:1;
+font-weight:bold;
+}
 
 input{
 width:90px;
@@ -59,11 +62,12 @@ color:red;
 display:flex;
 justify-content:space-between;
 margin-top:10px;
+margin-bottom:15px;
 }
 
 .left-buttons{
 display:flex;
-gap:8px;
+gap:10px;
 }
 
 button{
@@ -71,8 +75,8 @@ width:100px;
 padding:10px;
 font-weight:bold;
 font-size:15px;
+border:0px;
 border-radius:8px;
-border:0px solid black;
 cursor:pointer;
 }
 
@@ -82,22 +86,23 @@ cursor:pointer;
 
 .table-frame{
 background:white;
-border-radius:12px;
+border-radius:10px;
+height:350px;
 overflow:hidden;
-margin-top:20px;
-height:440px;
-padding-bottom:1px;
+padding:0;
+display:flex;
+flex-direction:column;
 }
 
 .table-wrapper{
-height:330px;
-overflow-y:scroll;
+flex:1;
+overflow-y:auto;
 }
 
 table{
 width:100%;
-height:440;
 border-collapse:collapse;
+background:white;
 color:black;
 text-align:center;
 table-layout:fixed;
@@ -105,18 +110,20 @@ table-layout:fixed;
 
 th,td{
 border:1px solid #ccc;
+padding:10px;
 }
 
 thead th{
 position:sticky;
 top:0;
+border:1px solid #aaa;
 background:#ddd;
 font-size:16px;
 padding:8px;
 }
 
 tbody td{
-font-size:15px;
+font-size:14px;
 padding:2px;
 }
 
@@ -137,6 +144,37 @@ font-weight:bold;
 color:red;
 }
 
+.table-actions{
+margin-top:15px;
+display:flex;
+justify-content:center;
+}
+
+.danger-btn{
+background:#c62828;
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:10px;
+font-weight:550;
+width:170px;
+}
+.table-actions{
+display:flex;
+justify-content:space-between;
+margin-top:15px;
+}
+
+.close-btn{
+background:#666;
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:10px;
+font-weight:550;
+width:120px;
+}
+
 .popup{
 display:none;
 position:fixed;
@@ -144,7 +182,7 @@ top:40%;
 left:50%;
 transform:translate(-50%,-50%);
 background:red;
-color:White;
+color:white;
 padding:10px;
 border-radius:10px;
 text-align:center;
@@ -155,6 +193,7 @@ display:block;
 width:120px;
 margin:5px auto;
 }
+
 @media (max-width:480px){
 
 button{
@@ -168,62 +207,6 @@ width:80px;
 font-size:18px;
 }
 
-}
-.button-row{
-gap:5px;
-}
-.table-actions{
-margin-top:10px;
-display:flex;
-justify-content:center;
-}
-
-.danger-btn{
-padding:7px;
-background:#28282B;
-color:yellow;
-border:none;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:14px;
-border-radius:8px;
-cursor:pointer;
-width:110px;
-padding-top:8px;
-
-}
-
-.app{
-    max-width:500px;
-    margin:auto;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:8px;
-    text-align:center;
-}
-
-.button-row{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    margin-top:15px;
-}
-
-.left-buttons{
-    display:flex;
-    gap:10px;
-}
-
-.table-actions{
-    margin-top:12px;
-    text-align:center;
 }
 
 </style>
@@ -266,29 +249,35 @@ th,td{
 
 <div class="table-frame">
 
-<div class="table-wrapper">
-<table>
-<thead>
-<tr>
-<th>DATUM</th>
-<th>VRIJ</th>
-<th>BAND</th>
-<th>DRIE</th>
-<th>KNIP</th>
-</tr>
-</thead>
+    <div class="table-wrapper">
 
-<tbody id="tabel">
-</tbody>
-</table>
+        <table>
+            <thead>
+                <tr>
+                    <th>DATUM</th>
+                    <th>VRIJ</th>
+                    <th>BAND</th>
+                    <th>DRIE</th>
+                    <th>KNIP</th>
+                </tr>
+            </thead>
+
+            <tbody id="tabel">
+            </tbody>
+        </table>
+
+    </div>
+
 </div>
 
 <div class="table-actions">
-<button onclick="wisAlles()" class="danger-btn">
-⚠ WIS ALLES
-</button>
-</div>
+    <button onclick="sluiten()" class="close-btn">
+        SLUITEN
+    </button>
 
+    <button onclick="wisAlles()" class="danger-btn">
+        ⚠ TABEL WISSEN
+    </button>
 </div>
 
 <div id="popup" class="popup">
@@ -297,6 +286,8 @@ th,td{
 <button onclick="opslaan('band')">Bandstoten</button>
 <button onclick="opslaan('drie')">Drieband</button>
 <button onclick="sluitPopup()">Annuleer</button>
+</div>
+</div>
 </div>
 
 </body>
@@ -338,10 +329,14 @@ laadData();
 }
 
 function wisAlles(){
-if(!confirm("Ben je zeker dat je alle opgeslagen wedstrijden wil wissen ?"))return;
+if(!confirm("Ben je zeker dat je de volledige tabel wil wissen?"))return;
 wedstrijden=[];
 bewaarData();
 laadData();
+}
+
+function sluiten(){
+window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function bereken(){
@@ -406,31 +401,3 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
