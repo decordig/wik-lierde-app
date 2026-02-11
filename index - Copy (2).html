@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>WIK Lierde Punten Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{font-family:Arial;background:#2e8b57;font-size:18px;color:white;padding:3px;}
+.app{max-width:420px;margin:auto;}
+.row{display:flex;justify-content:space-between;align-items:center;margin:8px 0;}
+label{flex:1;font-weight:bold;}
+input{width:90px;font-size:20px;font-weight:bold;color:blue;text-align:center;padding:4px;border-radius:6px;border:1px solid #aaa;}
+.result{width:90px;font-size:20px;font-weight:bold;text-align:center;padding:4px;border-radius:6px;border:1px solid #aaa;background:white;color:red;}
+.button-row{display:flex;justify-content:space-between;margin-top:10px;margin-bottom:15px;}
+.left-buttons{display:flex;gap:10px;}
+button{width:100px;padding:10px;font-weight:bold;font-size:15px;border:0;border-radius:8px;cursor:pointer;}
+.wissen{background:#ff5555;}
+.opslaan{background:#ffc107;}
+.bereken{background:#e6e6c8;}
+.table-frame{background:white;border-radius:10px;height:350px;overflow:hidden;display:flex;flex-direction:column;}
+.table-wrapper{flex:1;overflow-y:auto;}
+table{width:100%;border-collapse:collapse;background:white;color:black;text-align:center;table-layout:fixed;}
+th,td{border:1px solid #ccc;padding:10px;}
+thead th{position:sticky;top:0;background:#ddd;}
+tbody td{font-size:14px;padding:2px;}
+.cut{cursor:pointer;font-weight:bold;color:red;}
+.stats{margin-top:8px;font-size:13px;text-align:center;}
+.stats-bar{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+margin-top:10px;
+gap:10px;
+}
+
+.stats-left{
+font-size:13px;
+color:white;
+line-height:1.6;
+}
+
+.stats-left div{
+display:flex;
+gap:10px;
+}
+
+.stats-bar{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+margin-top:10px;
+gap:10px;
+}
+
+.stats-left{
+font-size:13px;
+color:white;
+line-height:1.6;
+}
+
+.stats-left div{
+display:flex;
+gap:10px;
+}
+
+.stats{
+  font-family: monospace;
+  white-space: pre;
+}
+.stats-row{
+display:grid;
+grid-template-columns: 140px 40px 80px 60px 60px;
+align-items:center;
+gap:6px;
+font-size:14px;
+}
+
+.stat-disc{
+font-weight:bold;
+}
+
+.stat-match,
+.stat-gem{
+text-align:right;
+font-variant-numeric: tabular-nums;
+}
+
+.danger-btn{
+background:#004040;
+color:yellow;
+border:none;
+font-weight:bold;
+font-size:14px;
+padding:8px 14px;
+width:115px;
+border-radius:8px;
+white-space:nowrap;
+}
+
+.popup{display:none;position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);background:red;color:white;padding:10px;border-radius:10px;text-align:center;}
+.popup button{display:block;width:120px;margin:5px auto;}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h2>PUNTEN-CALCULATOR</h2>
+
+<div class="row"><label>TE SPELEN PUNTEN</label><input id="tsp"></div>
+<div class="row"><label>GEMAAKTE PUNTEN</label><input id="gp"></div>
+<div class="row"><label>AANTAL BEURTEN</label><input id="brt"></div>
+
+<hr>
+
+<div class="row">
+<label>WEDSTRIJD PUNTEN</label>
+<div id="result" class="result">0</div>
+</div>
+
+<div class="button-row">
+<div class="left-buttons">
+<button class="wissen" onclick="wissen()">WISSEN</button>
+<button class="opslaan" onclick="toonPopup()">OPSLAAN</button>
+</div>
+<button class="bereken" onclick="bereken()">BEREKEN</button>
+</div>
+
+<div class="table-frame">
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>DATUM</th><th>VRIJ</th><th>BAND</th><th>DRIE</th><th>KNIP</th></tr>
+</thead>
+<tbody id="tabel"></tbody>
+</table>
+</div>
+</div>
+
+<div class="stats-bar">
+
+<div class="stats-left">
+<div id="stats-vrij"></div>
+<div id="stats-band"></div>
+<div id="stats-drie"></div>
+</div>
+
+<button onclick="wisAlles()" class="danger-btn">
+⚠ WIS ALLES
+</button>
+
+</div>
+<div id="popup" class="popup">
+<b>Kies discipline</b>
+<button onclick="opslaan('vrij')">Vrij Spel</button>
+<button onclick="opslaan('band')">Bandstoten</button>
+<button onclick="opslaan('drie')">Drieband</button>
+<button onclick="sluitPopup()">Annuleer</button>
+</div>
+
+</div>
+
+<script>
+let wedstrijden = JSON.parse(localStorage.getItem("wedstrijden")) || [];
+
+function bewaarData(){
+localStorage.setItem("wedstrijden",JSON.stringify(wedstrijden));
+}
+
+function voegRijToeAanTabel(item,index){
+let rij=document.createElement("tr");
+rij.innerHTML=`
+<td>${item.datum}</td>
+<td>${item.vrij}</td>
+<td>${item.band}</td>
+<td>${item.drie}</td>
+<td class="cut" onclick="verwijderRij(${index})">✖</td>`;
+document.getElementById("tabel").appendChild(rij);
+}
+
+function laadData(){
+document.getElementById("tabel").innerHTML="";
+wedstrijden.forEach((item,index)=>{
+voegRijToeAanTabel(item,index);
+});
+updateStats();
+}
+
+function verwijderRij(index){
+wedstrijden.splice(index,1);
+bewaarData();
+laadData();
+}
+
+function wisAlles(){
+if(!confirm("Ben je zeker dat je alle opgeslagen wedstrijden wil wissen ?"))return;
+wedstrijden=[];
+bewaarData();
+laadData();
+}
+
+function bereken(){
+let tsp=Number(document.getElementById("tsp").value);
+let gp=Number(document.getElementById("gp").value);
+let brt=Number(document.getElementById("brt").value);
+
+if(!tsp||!gp||!brt)return;
+
+let punten=(200-(4*brt))*(gp/tsp);
+document.getElementById("result").innerText=Math.round(punten);
+}
+
+function wissen(){
+document.getElementById("tsp").value="";
+document.getElementById("gp").value="";
+document.getElementById("brt").value="";
+document.getElementById("result").innerText="0";
+}
+
+function toonPopup(){
+document.getElementById("popup").style.display="block";
+}
+
+function sluitPopup(){
+document.getElementById("popup").style.display="none";
+}
+
+function opslaan(discipline){
+let vandaag=new Date();
+let datum=`${String(vandaag.getDate()).padStart(2,'0')}/${String(vandaag.getMonth()+1).padStart(2,'0')}/${vandaag.getFullYear()}`;
+let punten=document.getElementById("result").innerText;
+
+let vrij="",band="",drie="";
+if(discipline==="vrij")vrij=punten;
+if(discipline==="band")band=punten;
+if(discipline==="drie")drie=punten;
+
+wedstrijden.push({datum,vrij,band,drie});
+bewaarData();
+laadData();
+sluitPopup();
+}
+
+function updateStats(){
+
+let vrij=[],band=[],drie=[];
+
+wedstrijden.forEach(w=>{
+  if(w.vrij) vrij.push(Number(w.vrij));
+  if(w.band) band.push(Number(w.band));
+  if(w.drie) drie.push(Number(w.drie));
+});
+
+function gem(arr){
+  if(arr.length===0) return 0;
+  return Math.round(arr.reduce((a,b)=>a+b,0)/arr.length);
+}
+
+// formatter voor vaste kolommen
+function formatRow(naam, aantal, gemiddelde){
+  return [
+    naam.padEnd(14," "),
+    String(aantal).padStart(3," "),
+    "matchen".padEnd(10," "),
+    "gemid".padEnd(6," "),
+    String(gemiddelde).padStart(4," ")
+  ].join(" ");
+}
+
+function formatRow(discipline,aantal,gem){
+return `
+<span class="stat-disc">${discipline}</span>
+<span class="stat-match">${aantal}</span>
+<span class="stat-label">matchen</span>
+<span class="stat-label">gemid</span>
+<span class="stat-gem">${gem}</span>
+`;
+}
+
+document.getElementById("stats-vrij").innerHTML=
+formatRow("Vrij spel", vrij.length, gem(vrij));
+
+document.getElementById("stats-band").innerHTML=
+formatRow("Bandstoten", band.length, gem(band));
+
+document.getElementById("stats-drie").innerHTML=
+formatRow("Drieband", drie.length, gem(drie));
+
+}
+
+window.onload=laadData;
+</script>
+
+</body>
+</html>
