@@ -5,258 +5,113 @@
 <title>WIK Lierde Punten Calculator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2e8b57">
-
 <style>
-
-body{
-font-family:Arial;
-background:#2e8b57;
-font-size:18px;
-color:white;
-padding:5px;
-}
-
-.app{
-max-width:420px;
-margin:auto;
-}
-
-.row{
+body{font-family:Arial;background:#2e8b57;font-size:18px;color:white;padding:3px;}
+.app{max-width:420px;margin:auto;}
+.row{display:flex;justify-content:space-between;align-items:center;margin:8px 0;}
+label{flex:1;font-weight:bold;}
+input{width:90px;font-size:20px;font-weight:bold;color:blue;text-align:center;padding:4px;border-radius:6px;border:1px solid #aaa;}
+.result{width:90px;font-size:20px;font-weight:bold;text-align:center;padding:4px;border-radius:6px;border:1px solid #aaa;background:white;color:red;}
+.button-row{display:flex;justify-content:space-between;margin-top:10px;margin-bottom:15px;}
+.left-buttons{display:flex;gap:10px;}
+button{width:100px;padding:10px;font-weight:bold;font-size:15px;border:0;border-radius:8px;cursor:pointer;}
+.wissen{background:#ff5555;}
+.opslaan{background:#ffc107;}
+.bereken{background:#e6e6c8;}
+.table-frame{background:white;border-radius:10px;height:350px;overflow:hidden;display:flex;flex-direction:column;}
+.table-wrapper{flex:1;overflow-y:auto;}
+table{width:100%;border-collapse:collapse;background:white;color:black;text-align:center;table-layout:fixed;}
+th,td{border:1px solid #ccc;padding:10px;}
+thead th{position:sticky;top:0;background:#ddd;}
+tbody td{font-size:14px;padding:2px;}
+.cut{cursor:pointer;font-weight:bold;color:red;}
+.stats{margin-top:8px;font-size:13px;text-align:center;}
+.stats-bar{
 display:flex;
 justify-content:space-between;
-align-items:center;
-margin:8px 0;
-}
-
-label{
-flex:1;
-font-weight:bold;
-}
-
-input{
-width:90px;
-font-size:20px;
-font-weight:bold;
-color:blue;
-text-align:center;
-padding:4px;
-border-radius:6px;
-border:1px solid #aaa;
-}
-
-.result{
-width:90px;
-font-size:20px;
-font-weight:bold;
-text-align:center;
-padding:4px;
-border-radius:6px;
-border:1px solid #aaa;
-background:white;
-color:red;
-}
-
-.button-row{
-display:flex;
-justify-content:space-between;
+align-items:flex-start;
 margin-top:10px;
-margin-bottom:15px;
+gap:10px;
 }
 
-.left-buttons{
+.stats-left{
+font-size:13px;
+color:white;
+line-height:1.6;
+}
+
+.stats-left div{
 display:flex;
 gap:10px;
 }
 
-button{
-width:100px;
-padding:10px;
-font-weight:bold;
-font-size:15px;
-border:0px;
-border-radius:8px;
-cursor:pointer;
-}
-
-.wissen{background:#ff5555;}
-.opslaan{background:#ffc107;}
-.bereken{background:#e6e6c8;}
-
-.table-frame{
-background:white;
-border-radius:10px;
-height:350px;
-overflow:hidden;
-padding:0;
+.stats-bar{
 display:flex;
-flex-direction:column;
+justify-content:space-between;
+align-items:flex-start;
+margin-top:10px;
+gap:10px;
 }
 
-.table-wrapper{
-flex:1;
-overflow-y:auto;
+.stats-left{
+font-size:13px;
+color:white;
+line-height:1.6;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-background:white;
-color:black;
-text-align:center;
-table-layout:fixed;
+.stats-left div{
+display:flex;
+gap:10px;
 }
 
-th,td{
-border:1px solid #ccc;
-padding:10px;
+.stats{
+  font-family: monospace;
+  white-space: pre;
 }
-
-thead th{
-position:sticky;
-top:0;
-border:1px solid #aaa;
-background:#ddd;
-font-size:16px;
-padding:8px;
-}
-
-tbody td{
+.stats-row{
+display:grid;
+grid-template-columns: 140px 40px 80px 60px 60px;
+align-items:center;
+gap:6px;
 font-size:14px;
-padding:2px;
 }
 
-/* kolombreedtes */
-th:nth-child(1),td:nth-child(1){width:30%;}
-th:nth-child(2),
-th:nth-child(3),
-th:nth-child(4),
-th:nth-child(5),
-td:nth-child(2),
-td:nth-child(3),
-td:nth-child(4),
-td:nth-child(5){width:16%;}
-
-.cut{
-cursor:pointer;
+.stat-disc{
 font-weight:bold;
-color:red;
 }
 
-.table-actions{
-margin-top:15px;
-display:flex;
-justify-content:center;
+.stat-match,
+.stat-gem{
+text-align:right;
+font-variant-numeric: tabular-nums;
 }
 
 .danger-btn{
-background:#c62828;
-color:white;
+background:#004040;
+color:yellow;
 border:none;
-padding:8px 14px;
-border-radius:10px;
-font-weight:550;
-width:auto;        /* ← NIET vaste breedte */
-min-width:170px;
-}
-
-.table-actions{
-display:flex;
-justify-content:space-between;
-margin-top:15px;
-}
-
-.close-btn{
-background:#666;
-color:white;
-border:none;
-padding:8px 14px;
-border-radius:10px;
-font-weight:550;
-width:120px;
-}
-
-.popup{
-display:none;
-position:fixed;
-top:40%;
-left:50%;
-transform:translate(-50%,-50%);
-background:red;
-color:white;
-padding:10px;
-border-radius:10px;
-text-align:center;
-}
-
-.popup button{
-display:block;
-width:120px;
-margin:5px auto;
-}
-
-@media (max-width:480px){
-
-button{
-width:90px;
-padding:8px;
+font-weight:bold;
 font-size:14px;
-}
-
-input,.result{
-width:80px;
-font-size:18px;
-}
-
-.footer-actions{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-top:20px;   /* ruimte tussen tabel en knoppen */
-padding:0 4px;     /* kleine binnenruimte links/rechts */
-}
-.close-btn{
-background:#607d8b;
-color:white;
-border:none;
-border-radius:10px;
 padding:8px 14px;
-font-weight:550;
-width:auto;        /* ← NIET vaste breedte */
-min-width:120px;
+width:115px;
+border-radius:8px;
+white-space:nowrap;
 }
 
-.close-btn:active{
-transform:scale(0.96);
-}
-
-.danger-btn:active{
-transform:scale(0.96);
-}
-
+.popup{display:none;position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);background:red;color:white;padding:10px;border-radius:10px;text-align:center;}
+.popup button{display:block;width:120px;margin:5px auto;}
 </style>
 </head>
 
 <body>
+
 <div class="app">
 
 <h2>PUNTEN-CALCULATOR</h2>
 
-<div class="row">
-<label>TE SPELEN PUNTEN</label>
-<input id="tsp">
-</div>
-
-<div class="row">
-<label>GEMAAKTE PUNTEN</label>
-<input id="gp">
-</div>
-
-<div class="row">
-<label>AANTAL BEURTEN</label>
-<input id="brt">
-</div>
+<div class="row"><label>TE SPELEN PUNTEN</label><input id="tsp"></div>
+<div class="row"><label>GEMAAKTE PUNTEN</label><input id="gp"></div>
+<div class="row"><label>AANTAL BEURTEN</label><input id="brt"></div>
 
 <hr>
 
@@ -274,40 +129,29 @@ transform:scale(0.96);
 </div>
 
 <div class="table-frame">
-
-    <div class="table-wrapper">
-
-        <table>
-            <thead>
-                <tr>
-                    <th>DATUM</th>
-                    <th>VRIJ</th>
-                    <th>BAND</th>
-                    <th>DRIE</th>
-                    <th>KNIP</th>
-                </tr>
-            </thead>
-
-            <tbody id="tabel">
-            </tbody>
-        </table>
-
-    </div>
-
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>DATUM</th><th>VRIJ</th><th>BAND</th><th>DRIE</th><th>KNIP</th></tr>
+</thead>
+<tbody id="tabel"></tbody>
+</table>
+</div>
 </div>
 
-<div class="footer-actions">
+<div class="stats-bar">
 
-    <button class="close-btn" onclick="sluitenApp()">
-        SLUITEN
-    </button>
-
-    <button class="danger-btn" onclick="wisAlles()">
-        ⚠ TABEL WISSEN
-    </button>
-
+<div class="stats-left">
+<div id="stats-vrij"></div>
+<div id="stats-band"></div>
+<div id="stats-drie"></div>
 </div>
 
+<button onclick="wisAlles()" class="danger-btn">
+⚠ WIS ALLES
+</button>
+
+</div>
 <div id="popup" class="popup">
 <b>Kies discipline</b>
 <button onclick="opslaan('vrij')">Vrij Spel</button>
@@ -315,13 +159,10 @@ transform:scale(0.96);
 <button onclick="opslaan('drie')">Drieband</button>
 <button onclick="sluitPopup()">Annuleer</button>
 </div>
-</div>
-</div>
 
-</body>
+</div>
 
 <script>
-
 let wedstrijden = JSON.parse(localStorage.getItem("wedstrijden")) || [];
 
 function bewaarData(){
@@ -329,17 +170,13 @@ localStorage.setItem("wedstrijden",JSON.stringify(wedstrijden));
 }
 
 function voegRijToeAanTabel(item,index){
-
 let rij=document.createElement("tr");
-
 rij.innerHTML=`
 <td>${item.datum}</td>
 <td>${item.vrij}</td>
 <td>${item.band}</td>
 <td>${item.drie}</td>
-<td class="cut" onclick="verwijderRij(${index})">✖</td>
-`;
-
+<td class="cut" onclick="verwijderRij(${index})">✖</td>`;
 document.getElementById("tabel").appendChild(rij);
 }
 
@@ -348,11 +185,9 @@ document.getElementById("tabel").innerHTML="";
 wedstrijden.forEach((item,index)=>{
 voegRijToeAanTabel(item,index);
 });
+updateStats();
+}
 
-}
-function sluitenApp(){
-    window.history.back();
-}
 function verwijderRij(index){
 wedstrijden.splice(index,1);
 bewaarData();
@@ -360,14 +195,10 @@ laadData();
 }
 
 function wisAlles(){
-if(!confirm("Ben je zeker dat je de volledige tabel wil wissen?"))return;
+if(!confirm("Ben je zeker dat je alle opgeslagen wedstrijden wil wissen ?"))return;
 wedstrijden=[];
 bewaarData();
 laadData();
-}
-
-function sluiten(){
-window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function bereken(){
@@ -388,46 +219,78 @@ document.getElementById("brt").value="";
 document.getElementById("result").innerText="0";
 }
 
-function toonPopup(){ popup.style.display="block"; }
-function sluitPopup(){ popup.style.display="none"; }
+function toonPopup(){
+document.getElementById("popup").style.display="block";
+}
+
+function sluitPopup(){
+document.getElementById("popup").style.display="none";
+}
 
 function opslaan(discipline){
-
 let vandaag=new Date();
-let dag=String(vandaag.getDate()).padStart(2,'0');
-let maand=String(vandaag.getMonth()+1).padStart(2,'0');
-let jaar=vandaag.getFullYear();
-let datum=`${dag}/${maand}/${jaar}`;
+let datum=`${String(vandaag.getDate()).padStart(2,'0')}/${String(vandaag.getMonth()+1).padStart(2,'0')}/${vandaag.getFullYear()}`;
 let punten=document.getElementById("result").innerText;
 
 let vrij="",band="",drie="";
-
 if(discipline==="vrij")vrij=punten;
 if(discipline==="band")band=punten;
 if(discipline==="drie")drie=punten;
 
-let data={
-datum:datum,
-vrij:vrij,
-band:band,
-drie:drie
-};
-
-wedstrijden.push(data);
+wedstrijden.push({datum,vrij,band,drie});
 bewaarData();
 laadData();
-
 sluitPopup();
 }
 
-window.onload=laadData;
+function updateStats(){
 
-</script>
+let vrij=[],band=[],drie=[];
 
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
+wedstrijden.forEach(w=>{
+  if(w.vrij) vrij.push(Number(w.vrij));
+  if(w.band) band.push(Number(w.band));
+  if(w.drie) drie.push(Number(w.drie));
+});
+
+function gem(arr){
+  if(arr.length===0) return 0;
+  return Math.round(arr.reduce((a,b)=>a+b,0)/arr.length);
 }
+
+// formatter voor vaste kolommen
+function formatRow(naam, aantal, gemiddelde){
+  return [
+    naam.padEnd(14," "),
+    String(aantal).padStart(3," "),
+    "matchen".padEnd(10," "),
+    "gemid".padEnd(6," "),
+    String(gemiddelde).padStart(4," ")
+  ].join(" ");
+}
+
+function formatRow(discipline,aantal,gem){
+return `
+<span class="stat-disc">${discipline}</span>
+<span class="stat-match">${aantal}</span>
+<span class="stat-label">matchen</span>
+<span class="stat-label">gemid</span>
+<span class="stat-gem">${gem}</span>
+`;
+}
+
+document.getElementById("stats-vrij").innerHTML=
+formatRow("Vrij spel", vrij.length, gem(vrij));
+
+document.getElementById("stats-band").innerHTML=
+formatRow("Bandstoten", band.length, gem(band));
+
+document.getElementById("stats-drie").innerHTML=
+formatRow("Drieband", drie.length, gem(drie));
+
+}
+
+window.onload=laadData;
 </script>
 
 </body>
