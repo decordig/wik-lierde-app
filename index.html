@@ -21,6 +21,18 @@ button{width:100px;padding:10px;font-weight:bold;font-size:15px;border:0;border-
 .table-frame{background:white;border-radius:10px;height:350px;overflow:hidden;display:flex;flex-direction:column;}
 .table-wrapper{flex:1;overflow-y:auto;}
 table{width:100%;border-collapse:collapse;background:white;color:black;text-align:center;table-layout:fixed;}
+/* kolombreedtes */
+th:nth-child(1),td:nth-child(1){width:30%;}
+th:nth-child(2),
+th:nth-child(3),
+th:nth-child(4),
+th:nth-child(5),
+td:nth-child(2),
+td:nth-child(3),
+td:nth-child(4),
+td:nth-child(5){width:16%;}
+
+
 th,td{border:1px solid #ccc;padding:10px;}
 thead th{position:sticky;top:0;background:#ddd;}
 tbody td{font-size:14px;padding:2px;}
@@ -107,7 +119,7 @@ white-space:nowrap;
 
 <div class="app">
 
-<h2>PUNTEN-CALCULATOR</h2>
+<h2>BILJART-CALCULATOR</h2>
 
 <div class="row"><label>TE SPELEN PUNTEN</label><input id="tsp"></div>
 <div class="row"><label>GEMAAKTE PUNTEN</label><input id="gp"></div>
