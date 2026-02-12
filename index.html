@@ -38,60 +38,33 @@ td:nth-child(3),
 td:nth-child(4),
 td:nth-child(5){width:16%;}
 
-
 th,td{border:1px solid #ccc;padding:10px;}
 thead th{position:sticky;top:0;background:#ddd;}
 tbody td{font-size:14px;padding:2px;}
 .cut{cursor:pointer;font-weight:bold;color:red;}
-.stats{margin-top:8px;font-size:13px;text-align:center;}
-.stats-bar{
-display:flex;
-justify-content:space-between;
-align-items:flex-start;
-margin-top:10px;
-gap:10px;
-}
-
-.stats-left{
-font-size:13px;
-color:white;
-line-height:1.6;
-}
-
-.stats-left div{
-display:flex;
-gap:10px;
-}
-
-.stats-bar{
-display:flex;
-justify-content:space-between;
-align-items:flex-start;
-margin-top:10px;
-gap:10px;
-}
-
-.stats-left{
-font-size:13px;
-color:white;
-line-height:1.6;
-}
-
-.stats-left div{
-display:flex;
-gap:10px;
-}
 
 .stats{
-  font-family: monospace;
-  white-space: pre;
+margin-top:10px;
+display:flex;
+flex-direction:column;
+gap:4px;
+font-size:11px !important;
 }
+
+.stats-bar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:4px;
+}
+
 .stats-row{
 display:grid;
-grid-template-columns: 140px 40px 80px 60px 60px;
+grid-template-columns: 50px 40px 53px 10px 40px 20px;
 align-items:center;
-gap:6px;
-font-size:14px;
+gap:4px;
+font-size:12px !important;
+line-height:1.2;
 }
 
 .stat-disc{
@@ -158,18 +131,39 @@ white-space:nowrap;
 </div>
 
 <div class="stats-bar">
+<div class="stats">
 
-<div class="stats-left">
-<div id="stats-vrij"></div>
-<div id="stats-band"></div>
-<div id="stats-drie"></div>
+  <div id="stats-vrij" class="stats-row">
+    <span class="stat-disc">Vrij spel</span>
+    <span class="stat-match">0</span>
+    <span>matchen</span>
+    <span>gemid</span>
+    <span class="stat-gem">0</span>
+  </div>
+
+  <div id="stats-band" class="stats-row">
+    <span class="stat-disc">Bandstoten</span>
+    <span class="stat-match">0</span>
+    <span>matchen</span>
+    <span>gemid</span>
+    <span class="stat-gem">0</span>
+  </div>
+
+  <div id="stats-drie" class="stats-row">
+    <span class="stat-disc">Drieband</span>
+    <span class="stat-match">0</span>
+    <span>matchen</span>
+    <span>gemid</span>
+    <span class="stat-gem">0</span>
+  </div>
+
 </div>
 
 <button onclick="wisAlles()" class="danger-btn">
 ⚠ WIS ALLES
 </button>
-
 </div>
+
 <div id="popup" class="popup">
 <b>Kies discipline</b>
 <button onclick="opslaan('vrij')">Vrij Spel</button>
@@ -292,7 +286,8 @@ return `
 <span class="stat-disc">${discipline}</span>
 <span class="stat-match">${aantal}</span>
 <span class="stat-label">matchen</span>
-<span class="stat-label">gemid</span>
+<span class="stat-label">-</span>
+<span class="stat-label">gemid :</span>
 <span class="stat-gem">${gem}</span>
 `;
 }
